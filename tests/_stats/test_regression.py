@@ -50,3 +50,13 @@ class TestPolyFit:
             grid = np.linspace(part["x"].min(), part["x"].max(), gridsize)
             assert_array_equal(part["x"], grid)
             assert part["y"].diff().diff().dropna().abs().gt(0).all()
+
+    def test_missing_data(self, df):
+
+        groupby = GroupBy(["group"])
+        df.loc[7, "x"] = np.nan
+        df.loc[9, "y"] = np.nan
+        res = PolyFit(order=1, gridsize=100)(df[["x", "y"]], groupby, "x", {})
+
+        assert_array_equal(res.columns, ["x", "y"])
+        assert not res.isna().any().any()
