@@ -21,6 +21,7 @@ class PolyFit(Stat):
 
     def _fit_predict(self, data):
 
+        data = data.dropna(subset=["x", "y"])
         x = data["x"]
         y = data["y"]
         if x.nunique() <= self.order:
