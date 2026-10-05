@@ -1282,6 +1282,13 @@ class PairGrid(Grid):
             if dropna:
                 # Filter NA from the list of unique hue names
                 hue_names = list(filter(pd.notnull, hue_names))
+
+            # Only keep the observations whose hue level is in hue_order;
+            # this restores the pre-0.11 behavior of silently dropping rows
+            # with hue values not in an explicitly-narrowed hue_order.
+            data = data[data[hue].isin(hue_order)]
+            self.data = data
+
             self.hue_names = hue_names
             self.hue_vals = data[hue]
 

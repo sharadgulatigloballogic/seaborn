@@ -1170,6 +1170,26 @@ class TestPairGrid:
 
         plt.close("all")
 
+    def test_hue_order_missing_data_level(self):
+
+        # Regression test for GH2848: when hue_order does not contain all of
+        # the levels present in the hue variable, rows with the excluded
+        # levels should be dropped rather than raising an error.
+        order = ["a", "b"]
+        g = ag.PairGrid(self.df, hue="a", hue_order=order)
+
+        assert (g.data["a"].isin(order)).all()
+        assert g.hue_vals.isin(order).all()
+
+        g.map(plt.plot)
+
+        for line, level in zip(g.axes[1, 0].lines, order):
+            x, y = line.get_xydata().T
+            npt.assert_array_equal(x, self.df.loc[self.df.a == level, "x"])
+            npt.assert_array_equal(y, self.df.loc[self.df.a == level, "y"])
+
+        plt.close("all")
+
     def test_hue_in_map(self, long_df):
 
         g = ag.PairGrid(long_df, vars=["x", "y"])
