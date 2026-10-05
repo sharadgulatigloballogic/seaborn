@@ -154,10 +154,14 @@ class HueMapping(SemanticMapping):
             try:
                 normed = self.norm(key)
             except TypeError as err:
-                if np.isnan(key):
+                try:
+                    is_na = np.isnan(key)
+                except TypeError:
+                    is_na = False
+                if is_na:
                     value = (0, 0, 0, 0)
                 else:
-                    raise err
+                    raise ValueError(f"No color for hue level {key!r}") from err
             else:
                 if np.ma.is_masked(normed):
                     normed = np.nan
