@@ -1,0 +1,4 @@
+swe-custom-bench eval branch — base_commit: 94621cef29f80282436d73e8d2c0aa76dab81273
+repo: mwaskom/seaborn
+branch: eval-mwaskom__seaborn-2848-set-b
+set: set_b (first instance)
